@@ -26,12 +26,32 @@ struct AnalogClockView: View {
     }
     
     private var secondAngle: Double {
-        return Double(totalSeconds) * 6 // 累積秒数に基づいて計算
+        return Double(totalSeconds) * 6 // 累積秒数を６０秒でリセット
+    }
+    
+    //デジタル時計用のフォーマット
+    private var formattedTime: String {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .medium   //時：分：秒の形式
+        return formatter.string(from: currentTime)
     }
     
     var body: some View {
+        VStack {
+            //アナログ時計
             ZStack {
-                // 時計の文字盤
+                //時計の文字盤…数字
+                ForEach(1...12, id: \.self) { number in
+                    Text("\(number)")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundStyle(Color.primary)
+                        .rotationEffect(.degrees(-Double(number) * 30))
+                        .offset(y: -110) //数字を中央から外側に配置
+                        .rotationEffect(.degrees(Double(number) * 30)) //元の位置に戻す
+                }
+                
+                
+                // 時計の文字盤…目盛り
                 ForEach(0..<12) { tick in
                     Rectangle()
                         .fill(Color.primary)
@@ -70,23 +90,32 @@ struct AnalogClockView: View {
                     .frame(width: 10, height: 10)
             }
             .frame(width: 200, height: 200)
-            .onAppear {
-                // 初期化
-                let initialSeconds = calendar.component(.hour, from: currentTime) * 3600 +
-                                     calendar.component(.minute, from: currentTime) * 60 +
-                                     calendar.component(.second, from: currentTime)
-                totalSeconds = initialSeconds
-                
-                // タイマーで秒単位の更新
-                Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                    self.currentTime = Date()
-                    self.totalSeconds += 1 // 秒を累積
+            
+            //デジタル時計の表示
+            Text(formattedTime)
+                .font(.system(size: 40, weight: .bold, design: .monospaced))
+                .padding(.top, 100)  //アナログ時計との間隔を調整
+                .foregroundColor(.primary)
+        }
+            
+                .onAppear {
+                    // 初期化
+                    let initialSeconds = calendar.component(.hour, from: currentTime) * 3600 +
+                                         calendar.component(.minute, from: currentTime) * 60 +
+                                         calendar.component(.second, from: currentTime)
+                    totalSeconds = initialSeconds
                     
-                    //安全のため、1日の秒数を超えた場合に値をリセット
-                    if self.totalSeconds >= 86400 {
-                        self.totalSeconds = 0
-                    }
+                    // タイマーで秒単位の更新
+                    Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                        self.currentTime = Date()
+                        self.totalSeconds += 1 // 秒を累積
+                        
+                        //安全のため、1日の秒数を超えた場合に値をリセット
+                        if self.totalSeconds >= 86400 {
+                            self.totalSeconds = 0
+                        
                 }
+            }
         }
     }
 }
