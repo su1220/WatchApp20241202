@@ -14,6 +14,7 @@
 		849503F32CFD919600F991BF /* WatchApp20241202Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849503F22CFD919600F991BF /* WatchApp20241202Tests.swift */; };
 		849503FD2CFD919600F991BF /* WatchApp20241202UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849503FC2CFD919600F991BF /* WatchApp20241202UITests.swift */; };
 		849503FF2CFD919600F991BF /* WatchApp20241202UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849503FE2CFD919600F991BF /* WatchApp20241202UITestsLaunchTests.swift */; };
+		8495040E2D08D73F00F991BF /* AnalogFaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8495040D2D08D73F00F991BF /* AnalogFaceView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		849503F82CFD919600F991BF /* WatchApp20241202UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchApp20241202UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		849503FC2CFD919600F991BF /* WatchApp20241202UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApp20241202UITests.swift; sourceTree = "<group>"; };
 		849503FE2CFD919600F991BF /* WatchApp20241202UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApp20241202UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		8495040D2D08D73F00F991BF /* AnalogFaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalogFaceView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			children = (
 				849503E12CFD919500F991BF /* WatchApp20241202App.swift */,
 				849503E32CFD919500F991BF /* ContentView.swift */,
+				8495040D2D08D73F00F991BF /* AnalogFaceView.swift */,
 				849503E52CFD919600F991BF /* Assets.xcassets */,
 				849503E72CFD919600F991BF /* Preview Content */,
 			);
@@ -257,6 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8495040E2D08D73F00F991BF /* AnalogFaceView.swift in Sources */,
 				849503E42CFD919500F991BF /* ContentView.swift in Sources */,
 				849503E22CFD919500F991BF /* WatchApp20241202App.swift in Sources */,
 			);
