@@ -37,14 +37,13 @@ struct AnalogClockView: View {
     }
     
     var body: some View{
-        VStack{
+        VStack(spacing: 40) {
             //アナログ時計
             AnalogFaceView(hourAngle: hourAngle, minuteAngle: minuteAngle, secondAngle: secondAngle)
-            
+
             //デジタル時計の表示
             Text(formattedTime)
-                .font(.system(size: 40, weight: .bold, design: .monospaced))
-                .padding(.top, 100) //アナログ時計との間隔を調整
+                .font(.system(size: 36, weight: .bold, design: .monospaced))
                 .foregroundColor(.primary)
         }
         .onAppear{
