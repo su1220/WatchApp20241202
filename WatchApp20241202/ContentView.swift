@@ -1,76 +1,92 @@
 //
 //  ContentView.swift
 
-
 import SwiftUI
+import AudioToolbox
+import AVFoundation
 
-struct AnalogClockView: View {
+// 音声設定（将来の UserDefaults 化・設定画面対応を前提とした設計）
+enum SoundConfig {
+    static let forecastLeadSeconds = 3                    // 時報の何秒前から予報音を鳴らすか
+    static let forecastSoundID: SystemSoundID = 1340      // 予報音
+    static let timeSoundID: SystemSoundID = 1167          // 時報音
+}
+
+// 表示スタイル（将来の設定画面から選択可能にする）
+enum ClockStyle {
+    case standard       // 標準
+    case sevenSegment   // 7セグ風
+    case nixieTube      // ニキシー管風
+}
+
+// 表示設定（将来の UserDefaults 化・設定画面対応を前提とした設計）
+enum DisplayConfig {
+    static let fontSize: CGFloat = 40
+    static let fontWeight: Font.Weight = .bold
+    static let color: Color = .primary
+    static let style: ClockStyle = .standard
+}
+
+struct DigitalClockView: View {
     @State private var currentTime = Date()
-    @State private var totalSeconds: Int = 0
-    
-    private var calendar: Calendar {
-        Calendar.current
-    }
-    
-    //時間に基づいて角度を計算
-    private var hourAngle: Double {
-        let hours = Double(calendar.component(.hour, from: currentTime) % 12)
-        let minutes = Double(calendar.component(.minute, from: currentTime))
-        return (hours * 30) + (minutes / 60 * 30)   //1時間30度　+ 分に応じた補正
-    }
-    
-    private var minuteAngle: Double {
-        let minutes = Double(calendar.component(.minute, from: currentTime))
-        let seconds = Double(calendar.component(.second, from: currentTime))
-        return (minutes * 6) + (seconds / 60 * 6)   //1分6度　+ 秒に応じた補正
-    }
-    
-    private var secondAngle : Double {
-        return Double(totalSeconds) * 6 //累積秒数を60秒でリセット
-    }
-    
-    //デジタル時計用のフォーマット
+    // AVSpeechSynthesizer は @State で保持し、ビュー再生成時も同一インスタンスを維持する
+    @State private var synthesizer = AVSpeechSynthesizer()
+
+    // デジタル時計用のフォーマット（時：分：秒）
     private var formattedTime: String {
         let formatter = DateFormatter()
-        formatter.timeStyle = .medium   //時：分：秒の形式
+        formatter.timeStyle = .medium
         return formatter.string(from: currentTime)
     }
-    
-    var body: some View{
-        VStack{
-            //アナログ時計
-            AnalogFaceView(hourAngle: hourAngle, minuteAngle: minuteAngle, secondAngle: secondAngle)
-            
-            //デジタル時計の表示
-            Text(formattedTime)
-                .font(.system(size: 40, weight: .bold, design: .monospaced))
-                .padding(.top, 100) //アナログ時計との間隔を調整
-                .foregroundColor(.primary)
+
+    // 読み上げ用テキスト（例：「7時58分です」「9時ちょうどです」）
+    private var speakText: String {
+        let hour = Calendar.current.component(.hour, from: currentTime)
+        let minute = Calendar.current.component(.minute, from: currentTime)
+        if minute == 0 {
+            return "\(hour)時ちょうどです"
+        } else {
+            return "\(hour)時\(minute)分です"
         }
-        .onAppear{
-            //初期化
-            let initialSeconds = calendar.component(.hour, from: currentTime) * 3600 +
-                calendar.component(.minute, from: currentTime) * 60 +
-                calendar.component(.second, from: currentTime)
-            totalSeconds = initialSeconds
-            
-            //タイマーで秒単位の更新
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                self.currentTime = Date()
-                self.totalSeconds += 1  //秒を累積
-                
-                //安全のため、1日の秒数を超えた場合に値をリセット
-                if self.totalSeconds >= 86400 {
-                    self.totalSeconds = 0
+    }
+
+    // 秒に応じて予報音・時報音・読み上げを実行
+    private func playScheduledSound() {
+        let second = Calendar.current.component(.second, from: currentTime)
+        let leadStart = 60 - SoundConfig.forecastLeadSeconds  // = 57
+
+        if second == 0 {
+            // 時報音を再生し、鳴り終わってから時刻を読み上げ
+            let text = speakText
+            AudioServicesPlaySystemSoundWithCompletion(SoundConfig.timeSoundID) {
+                let utterance = AVSpeechUtterance(string: text)
+                self.synthesizer.speak(utterance)
+            }
+        } else if second >= leadStart {
+            // 予報音（57・58・59秒）
+            AudioServicesPlaySystemSound(SoundConfig.forecastSoundID)
+        }
+    }
+
+    var body: some View {
+        Text(formattedTime)
+            .font(.system(size: DisplayConfig.fontSize,
+                          weight: DisplayConfig.fontWeight,
+                          design: .monospaced))
+            .foregroundColor(DisplayConfig.color)
+            .onAppear {
+                // タイマーで秒単位の更新と音声再生
+                Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                    self.currentTime = Date()
+                    self.playScheduledSound()
                 }
             }
-        }
     }
 }
 
 struct ContentView: View {
     var body: some View {
-        AnalogClockView()
+        DigitalClockView()
     }
 }
 
