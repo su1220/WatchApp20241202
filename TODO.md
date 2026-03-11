@@ -11,8 +11,6 @@
 ## Phase 2: ContentView.swift の改修
 - [x] `AnalogClockView` → `DigitalClockView` にリネーム
 - [x] アナログ時計関連コードを削除
-  - `totalSeconds`、`calendar`、各角度計算プロパティ
-  - `AnalogFaceView()` の呼び出し
 - [x] `AudioToolbox` + `AVFoundation` をインポート
 - [x] `SoundConfig` enum を追加（forecastSoundID: 1340、timeSoundID: 1167）
 - [x] `DisplayConfig` enum と `ClockStyle` enum を追加
@@ -21,3 +19,11 @@
   - 00秒：時報音（ID: 1167）
   - 時報音終了後：`AVSpeechSynthesizer` で「〇時〇〇分です」を読み上げ
 - [x] デジタル時計の表示を `DisplayConfig` を使って実装
+
+## Phase 3: ファイル分割リファクタリング
+- [x] `SoundConfig.swift` を新規作成（UserDefaults 対応）
+- [x] `DisplayConfig.swift` を新規作成（UserDefaults 対応 + ClockStyle）
+- [x] `DigitalClockView.swift` を新規作成
+- [x] `ContentView.swift` をルートのみに簡略化
+- [x] `project.pbxproj` に新ファイルの参照を追加（4箇所）
+- [x] `CLAUDE.md`・`TODO.md` を更新
