@@ -1,0 +1,20 @@
+# ===== macOS =====
+# Finderが自動生成するフォルダ設定ファイル
+.DS_Store
+
+# ===== Xcode（ユーザー個人設定）=====
+# 開いていたファイルやブレークポイントなど、各自の環境固有データ
+xcuserdata/
+*.xcuserstate
+
+# ===== ビルド生成物 =====
+# コンパイルで自動生成されるため保存不要
+build/
+DerivedData/
+
+# ===== Swift Package Manager =====
+.build/
+.swiftpm/
+
+# ===== その他 =====
+*.log
