@@ -25,9 +25,9 @@ final class ClockManager: ObservableObject {
     private var timer: Timer?
 
     private init() {
-        // アプリのオーディオセッションを使って発話する
-        // （AudioSessionManager の .duckOthers が効き、他アプリ音を下げる）
-        synthesizer.usesApplicationAudioSession = true
+        // シンセサイザに専用のオーディオセッションを管理させる。
+        // 共有セッション(true)だと常駐プレイヤーと競合し、背面で発話が固まるため。
+        synthesizer.usesApplicationAudioSession = false
     }
 
     // 毎秒タイマーを開始。アプリ常駐中はバックグラウンドでも動き続ける

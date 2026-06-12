@@ -2,10 +2,10 @@
 //  AudioSessionManager.swift
 //
 //  バックグラウンドでも音声を鳴らすための基盤。
-//  ・オーディオセッションを .playback / .duckOthers で構成
-//    （読み上げ時に他アプリの音を一瞬下げる＝ナビと同じダッキング）
-//  ・無音を極小ループ再生してアプリを凍結（suspend）させない
-//    → これにより Timer がバックグラウンドでも動き続ける
+//  ・オーディオセッションを .playback / .mixWithOthers で構成し他アプリと共存
+//  ・人にはほぼ聞こえない極小トーンをループ再生して、
+//    アプリの凍結（suspend）を防ぎ、かつオーディオ経路を起こし続ける
+//    → これにより Timer が背面で動き続け、読み上げ(TTS)も背面で鳴らせる
 //
 
 import AVFoundation
@@ -30,11 +30,11 @@ final class AudioSessionManager {
     private func configureSession() {
         let session = AVAudioSession.sharedInstance()
         do {
-            // .playback        … 消音スイッチを無視し、バックグラウンドでも鳴らせる
-            // .duckOthers      … 自分が鳴る間、他アプリの音量を下げる（ナビ的挙動）
-            // .mixWithOthers   … 他アプリの再生を止めず共存させる
-            try session.setCategory(.playback,
-                                    options: [.duckOthers, .mixWithOthers])
+            // .playback      … 消音スイッチを無視し、バックグラウンドでも鳴らせる
+            // .mixWithOthers … 他アプリの再生を止めず共存させる
+            // （常時トーンを流すため、ここで .duckOthers は付けない。
+            //   他アプリ音を下げるダッキングは発話時のみ別途行う想定）
+            try session.setCategory(.playback, options: [.mixWithOthers])
             try session.setActive(true)
         } catch {
             print("オーディオセッションの設定に失敗: \(error)")
@@ -47,11 +47,11 @@ final class AudioSessionManager {
         do {
             let player = try AVAudioPlayer(contentsOf: url)
             player.numberOfLoops = -1   // -1 で無限ループ
-            player.volume = 0           // 完全な無音
+            player.volume = 1.0         // 振幅自体が極小なので 1.0 でもほぼ聞こえない
             player.play()
             silencePlayer = player
         } catch {
-            print("無音ループの再生に失敗: \(error)")
+            print("常駐トーンの再生に失敗: \(error)")
         }
     }
 
@@ -84,10 +84,18 @@ final class AudioSessionManager {
         data.append(uint16: UInt16(blockAlign))
         data.append(uint16: UInt16(bitsPerSample))
 
-        // --- data サブチャンク（中身はすべて0＝無音）---
+        // --- data サブチャンク（極小音量のトーン）---
+        // 完全な無音だとオーディオ経路がアイドル化し、背面で読み上げが固まる。
+        // 人にはほぼ聞こえない超低音(20Hz)・極小振幅のトーンで経路を起こし続ける。
         data.append(contentsOf: Array("data".utf8))
         data.append(uint32: UInt32(dataSize))
-        data.append(Data(repeating: 0, count: dataSize))
+        let frequency = 20.0               // 20Hz（多くの端末スピーカーでほぼ聞こえない超低音）
+        let amplitude = 64.0               // Int16最大32767に対しごく小さい振幅
+        for i in 0..<sampleCount {
+            let t = Double(i) / Double(sampleRate)
+            let value = Int16(amplitude * sin(2.0 * Double.pi * frequency * t))
+            data.append(uint16: UInt16(bitPattern: value))
+        }
 
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("silence.wav")
