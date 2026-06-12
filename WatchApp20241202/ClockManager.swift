@@ -10,7 +10,7 @@ import Foundation
 import AudioToolbox
 import AVFoundation
 
-final class ClockManager: ObservableObject {
+final class ClockManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
 
     // アプリ全体で1つだけ使うシングルトン
     static let shared = ClockManager()
@@ -24,10 +24,13 @@ final class ClockManager: ObservableObject {
     // 毎秒のタイマー
     private var timer: Timer?
 
-    private init() {
+    private override init() {
+        super.init()
         // シンセサイザに専用のオーディオセッションを管理させる。
         // 共有セッション(true)だと常駐プレイヤーと競合し、背面で発話が固まるため。
         synthesizer.usesApplicationAudioSession = false
+        // 読み上げ完了を検知してダッキングを終了するため delegate を設定
+        synthesizer.delegate = self
     }
 
     // 毎秒タイマーを開始。アプリ常駐中はバックグラウンドでも動き続ける
@@ -59,7 +62,16 @@ final class ClockManager: ObservableObject {
         let second    = Calendar.current.component(.second, from: currentTime)
         let leadStart = 60 - SoundConfig.forecastLeadSeconds  // デフォルト = 57
 
+        // 予報音の1秒前にダッキングを開始しておく。
+        // 重い setActive を予報音と同じ tick で実行すると1回目の予報音が遅れて
+        // 間隔がズレるため、ビープの無いこのタイミングで先に済ませておく。
+        if second == leadStart - 1 {
+            AudioSessionManager.shared.beginDucking()
+        }
+
         if second == 0 {
+            // 予報音を無効にしている場合の保険（既に下げ中なら冪等に無視される）
+            AudioSessionManager.shared.beginDucking()
             // 時報音を再生し、鳴り終わってから時刻を読み上げ
             let text = speakText
             AudioServicesPlaySystemSoundWithCompletion(SoundConfig.timeSoundID) { [weak self] in
@@ -73,5 +85,17 @@ final class ClockManager: ObservableObject {
             // 予報音（57・58・59秒）
             AudioServicesPlaySystemSound(SoundConfig.forecastSoundID)
         }
+    }
+
+    // MARK: - AVSpeechSynthesizerDelegate
+
+    // 読み上げが終わったらダッキングを終了し、他アプリの音量を戻す
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        AudioSessionManager.shared.endDucking()
+    }
+
+    // 読み上げがキャンセルされた場合も確実にダッキングを終了する
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        AudioSessionManager.shared.endDucking()
     }
 }
