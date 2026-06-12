@@ -18,6 +18,7 @@
 		6AF5E08AF1DB431CA5196F51 /* DisplayConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DE081F93B14D9181A61457 /* DisplayConfig.swift */; };
 		6F47A48E70CF4483B598E3BF /* DigitalClockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5221968481F44EA8BF0FE9FC /* DigitalClockView.swift */; };
 		DDDD4444EEEE5555FFFF6666 /* AudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAA1111BBBB2222CCCC3333 /* AudioSessionManager.swift */; };
+		DDDD5555EEEE6666FFFF7777 /* ClockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAA2222BBBB3333CCCC4444 /* ClockManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		45DE081F93B14D9181A61457 /* DisplayConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfig.swift; sourceTree = "<group>"; };
 		5221968481F44EA8BF0FE9FC /* DigitalClockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigitalClockView.swift; sourceTree = "<group>"; };
 		AAAA1111BBBB2222CCCC3333 /* AudioSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionManager.swift; sourceTree = "<group>"; };
+		AAAA2222BBBB3333CCCC4444 /* ClockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 				0F54D72381964206BF5CB18E /* SoundConfig.swift */,
 				45DE081F93B14D9181A61457 /* DisplayConfig.swift */,
 				AAAA1111BBBB2222CCCC3333 /* AudioSessionManager.swift */,
+				AAAA2222BBBB3333CCCC4444 /* ClockManager.swift */,
 					849503E52CFD919600F991BF /* Assets.xcassets */,
 				849503E72CFD919600F991BF /* Preview Content */,
 			);
@@ -275,6 +278,7 @@
 				EE71AEBA01A64A0C8B1D8772 /* SoundConfig.swift in Sources */,
 				6AF5E08AF1DB431CA5196F51 /* DisplayConfig.swift in Sources */,
 				DDDD4444EEEE5555FFFF6666 /* AudioSessionManager.swift in Sources */,
+				DDDD5555EEEE6666FFFF7777 /* ClockManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
