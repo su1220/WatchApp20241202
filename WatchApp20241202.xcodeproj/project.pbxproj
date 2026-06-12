@@ -17,6 +17,7 @@
 		EE71AEBA01A64A0C8B1D8772 /* SoundConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F54D72381964206BF5CB18E /* SoundConfig.swift */; };
 		6AF5E08AF1DB431CA5196F51 /* DisplayConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DE081F93B14D9181A61457 /* DisplayConfig.swift */; };
 		6F47A48E70CF4483B598E3BF /* DigitalClockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5221968481F44EA8BF0FE9FC /* DigitalClockView.swift */; };
+		DDDD4444EEEE5555FFFF6666 /* AudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAA1111BBBB2222CCCC3333 /* AudioSessionManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		0F54D72381964206BF5CB18E /* SoundConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundConfig.swift; sourceTree = "<group>"; };
 		45DE081F93B14D9181A61457 /* DisplayConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfig.swift; sourceTree = "<group>"; };
 		5221968481F44EA8BF0FE9FC /* DigitalClockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigitalClockView.swift; sourceTree = "<group>"; };
+		AAAA1111BBBB2222CCCC3333 /* AudioSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				5221968481F44EA8BF0FE9FC /* DigitalClockView.swift */,
 				0F54D72381964206BF5CB18E /* SoundConfig.swift */,
 				45DE081F93B14D9181A61457 /* DisplayConfig.swift */,
+				AAAA1111BBBB2222CCCC3333 /* AudioSessionManager.swift */,
 					849503E52CFD919600F991BF /* Assets.xcassets */,
 				849503E72CFD919600F991BF /* Preview Content */,
 			);
@@ -271,6 +274,7 @@
 				6F47A48E70CF4483B598E3BF /* DigitalClockView.swift in Sources */,
 				EE71AEBA01A64A0C8B1D8772 /* SoundConfig.swift in Sources */,
 				6AF5E08AF1DB431CA5196F51 /* DisplayConfig.swift in Sources */,
+				DDDD4444EEEE5555FFFF6666 /* AudioSessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +442,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIBackgroundModes = audio;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -467,6 +472,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIBackgroundModes = audio;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
